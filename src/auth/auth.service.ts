@@ -12,7 +12,8 @@ import { LoginDto } from './dto/login.dto';
 import { SesionVista, toSesionVista } from './auth.view';
 
 // Hash de relleno para que el tiempo de respuesta no revele si el correo o la organización existen (anti-enumeración).
-const DUMMY_HASH = bcrypt.hashSync('relleno-anti-enumeracion', 12);
+const BCRYPT_COSTO = 12;
+const DUMMY_HASH = bcrypt.hashSync('relleno-anti-enumeracion', BCRYPT_COSTO);
 const PROPOSITO_RESET = 'reset-clave';
 
 @Injectable()
@@ -62,7 +63,7 @@ export class AuthService {
       await this.audit.log({ organizacionId: tenant?.id ?? null, entidad: 'sesion', accion: 'RESET_FALLIDO', ip });
       throw new BadRequestException('Código inválido o vencido');
     }
-    await this.users.actualizarClave(user.id, await bcrypt.hash(dto.nuevaClave, 12));
+    await this.users.actualizarClave(user.id, await bcrypt.hash(dto.nuevaClave, BCRYPT_COSTO));
     await this.audit.log({ organizacionId: tenant.id, usuarioId: user.id, entidad: 'usuario', entidadId: user.id, accion: 'CLAVE_RESTABLECIDA', ip });
     this.avisarCambio(user.correo);
   }
@@ -77,7 +78,7 @@ export class AuthService {
       throw new UnprocessableEntityException('La contraseña actual no es correcta');
     }
     if (dto.claveActual === dto.nuevaClave) throw new BadRequestException('La nueva contraseña debe ser distinta de la actual');
-    await this.users.actualizarClave(user.id, await bcrypt.hash(dto.nuevaClave, 12));
+    await this.users.actualizarClave(user.id, await bcrypt.hash(dto.nuevaClave, BCRYPT_COSTO));
     await this.audit.log({ organizacionId: user.organizacionId, usuarioId: user.id, entidad: 'usuario', entidadId: user.id, accion: 'CLAVE_CAMBIADA', ip });
     this.avisarCambio(user.correo);
   }
