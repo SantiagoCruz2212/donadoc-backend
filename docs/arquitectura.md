@@ -73,13 +73,12 @@ Contenedores y responsabilidades:
 |---|---|---|---|
 | Frontend | React 18, Vite, Zustand, React Hook Form + Zod, Axios | Interfaz; solo renderiza, la lógica va en hooks y el HTTP en `apis/` | repositorio `donadoc-frontend` |
 | Backend | NestJS 11, TypeORM, JWT RS256, Swagger | API REST: casos, documentos, extracción con IA, formatos, firma con OTP, red, auditoría | este repositorio |
-| Base de datos | PostgreSQL 16 | Datos del negocio; esquema por migraciones al desplegar | `Backend/src/database/migrations` |
-| Archivos | Volumen Docker | Historias clínicas cargadas y PDF generados (detrás de la abstracción `almacenamiento`) | `Backend/src/documentos/storage` |
-| Proxy | Caddy 2 | HTTPS, redirige `/api/*` al backend y el resto al frontend | `deploy/Caddyfile` |
+| Base de datos | PostgreSQL 16 | Datos del negocio; esquema por migraciones al desplegar | `src/database/migrations` |
+| Archivos | Volumen Docker | Historias clínicas cargadas y PDF generados (detrás de la abstracción `almacenamiento`) | `src/documentos/storage` |
+| Proxy | Caddy 2 | HTTPS, redirige `/api/*` al backend y el resto al frontend | Caddyfile de producción (no incluido aquí) |
 | IA local | Ollama | Alternativa gratuita a Gemini; solo con `--profile ollama` | `docker-compose.yml` |
 
-Despliegue: GitHub Actions ejecuta las pruebas ([`ci.yml`](../.github/workflows/ci.yml)), publica las imágenes en GHCR y
-despliega por SSH ([`deploy.yml`](../.github/workflows/deploy.yml)). Detalle en [`DESPLIEGUE.md`](DESPLIEGUE.md).
+Despliegue previsto: GitHub Actions (pruebas), imágenes en GHCR y despliegue por SSH; aún no está configurado en estos repositorios.
 
 ## Verificación contra el código
 
@@ -91,7 +90,7 @@ Regla de la sesión: no dibujar componentes que no existan. Esto se comprobó en
 | Servicio de autenticación separado | Es el módulo `auth/` dentro del backend | Un solo contenedor de backend |
 | Almacenamiento S3 | Disco local en el volumen `uploads` (`almacenamiento-local.ts`), tras la abstracción `almacenamiento` | Se dibuja el volumen |
 | Gemini y Ollama a la vez | Un solo proveedor según `EXTRACTOR_IA_PROVIDER` | Aclarado en las notas del nivel 1 |
-| Caddy en desarrollo | Solo existe en `deploy/docker-compose.prod.yml`; `docker-compose.yml` expone 8080 y 3000 | Flecha punteada de desarrollo |
+| Caddy en desarrollo | Solo existe en la configuración de producción; en desarrollo se exponen los puertos 8080 y 3000 | Flecha punteada de desarrollo |
 
 > **Corrección para explicar en clase (completar por quien presenta):** escriba aquí la corrección concreta que hizo al
 > comparar el diagrama generado por su IA con el código.
