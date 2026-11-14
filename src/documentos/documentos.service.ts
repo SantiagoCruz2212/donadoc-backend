@@ -69,7 +69,16 @@ export class DocumentosService {
   async leerTexto(doc: Documento): Promise<string> {
     if (!doc.rutaArchivo) throw new NotFoundException('El documento no tiene archivo');
     const buf = await this.almacenamiento.get(doc.rutaArchivo);
-    const texto = doc.rutaArchivo.toLowerCase().endsWith('.pdf') ? (await pdfParse(buf)).text : buf.toString('utf8');
+    const texto = doc.rutaArchivo.toLowerCase().endsWith('.pdf') ? await this.textoDePdf(buf) : buf.toString('utf8');
     return texto.replace(/\s+\n/g, '\n').trim().slice(0, MAX_CARACTERES_IA);
+  }
+
+  /** Un PDF dañado o protegido hace fallar a pdf-parse: se responde 422 en vez de un 500 sin explicación. */
+  private async textoDePdf(buf: Buffer): Promise<string> {
+    try {
+      return (await pdfParse(buf)).text;
+    } catch {
+      throw new UnprocessableEntityException('No se pudo leer el PDF: está dañado o protegido');
+    }
   }
 }

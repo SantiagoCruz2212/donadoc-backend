@@ -146,6 +146,11 @@ describe('DocumentosService.leerTexto', () => {
     expect(pdfParse).toHaveBeenCalled();
   });
 
+  it('un PDF dañado responde 422 y no un error interno', async () => {
+    (pdfParse as jest.Mock).mockRejectedValueOnce(new Error('Invalid PDF structure'));
+    await expect(crear().svc.leerTexto({ rutaArchivo: 'c/1-h.pdf' } as never)).rejects.toBeInstanceOf(UnprocessableEntityException);
+  });
+
   it('un documento sin archivo responde 404', async () => {
     await expect(crear().svc.leerTexto({ rutaArchivo: null } as never)).rejects.toBeInstanceOf(NotFoundException);
   });
