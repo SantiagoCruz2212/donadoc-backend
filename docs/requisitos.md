@@ -70,11 +70,11 @@ Estado: **Hecha**
 
 ### HU-07: Cifrar los datos sensibles en la base de datos
 Como **responsable de la clínica**, quiero que los datos médicos sensibles no se guarden en claro en la base de datos, para que quien acceda a la base no los lea directamente.
-- Dado un dato clínico sensible (historia clínica, valores de los formatos), cuando se guarda, entonces en la base queda cifrado.
+- Dado un dato clínico sensible (valores de los formatos, sugerencias de la IA, causas), cuando se guarda, entonces en la base queda cifrado.
 - Dado un usuario autorizado, cuando consulta el caso por la API, entonces ve el dato descifrado.
 - Dado que falta la llave de cifrado, cuando arranca el backend en producción, entonces se niega a iniciar (no guarda en claro).
 
-Estado: **Pendiente** (**PROPUESTA** surgida en la sesión 1: hoy los datos quedan en claro; falta decidir qué campos son sensibles)
+Estado: **Parcial** (**PROPUESTA** surgida en la sesión 1). Cifrados con AES-256-GCM: datos de los formatos, sugerencias de la IA, respuesta cruda de la IA y causas de muerte, contraindicación y no rescate. Pendiente: datos de identificación del donante (requiere índice ciego), archivos en disco y script para cifrar los datos existentes.
 
 ### HU-08: Usar la aplicación desde una URL pública
 Como **docente evaluador**, quiero abrir la aplicación en una URL pública, para ver el funcionamiento sin instalar nada.

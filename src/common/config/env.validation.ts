@@ -43,6 +43,11 @@ export const envSchema = Joi.object({
   MAIL_FROM: Joi.string().default('DonaDoc <no-responder@donadoc.local>'),
   // Secreto que firma (HMAC) los códigos OTP guardados; obligatorio en producción.
   OTP_PEPPER: Joi.string().min(16).when('ENVIRONMENT', { is: 'prod', then: Joi.required(), otherwise: Joi.string().min(16).default('pepper-solo-para-desarrollo-local') }),
+  // Llave (32 bytes en hexadecimal) con la que se cifran los datos clínicos sensibles en la base de datos; obligatoria en producción.
+  // Genere una: openssl rand -hex 32. Si se pierde, los datos cifrados no se pueden recuperar.
+  DATA_ENCRYPTION_KEY: Joi.string().empty('').pattern(/^[0-9a-fA-F]{64}$/)
+    .messages({ 'string.pattern.base': 'DATA_ENCRYPTION_KEY debe tener 64 caracteres hexadecimales (openssl rand -hex 32)' })
+    .when('ENVIRONMENT', { is: 'prod', then: Joi.required(), otherwise: Joi.string().default('0'.repeat(63) + '1') }),
   OTP_TTL_MIN: Joi.number().min(1).max(60).default(10),
   OTP_MAX_INTENTOS: Joi.number().min(1).max(10).default(5),
   OTP_REENVIO_SEG: Joi.number().min(0).default(60),

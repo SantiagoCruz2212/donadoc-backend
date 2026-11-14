@@ -1,3 +1,4 @@
+import { jsonCifrado, textoCifrado } from '@common/crypto/campo-cifrado';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ExtraccionIa } from './extraccion-ia.entity';
 
@@ -12,10 +13,10 @@ export class SugerenciaIa {
   @JoinColumn({ name: 'extraccion_id' })
   extraccion: ExtraccionIa;
   @Column() campo: string;
-  @Column({ type: 'text', nullable: true }) valorSugerido: string | null;
+  @Column({ type: 'text', nullable: true, transformer: textoCifrado }) valorSugerido: string | null;
   @Column({ type: 'numeric', precision: 4, scale: 3, nullable: true, transformer: numerico }) confianza: number | null;
   @Column({ default: 'PENDIENTE' }) decision: string;
-  @Column({ type: 'text', nullable: true }) valorFinal: string | null;
+  @Column({ type: 'text', nullable: true, transformer: textoCifrado }) valorFinal: string | null;
   @Column({ type: 'uuid', nullable: true }) decididoPor: string | null;
   @Column({ type: 'timestamptz', nullable: true }) decididoEn: Date | null;
 }
