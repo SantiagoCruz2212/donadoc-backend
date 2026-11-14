@@ -54,4 +54,31 @@ describe('Validación de variables de entorno (la aplicación no arranca si falt
   it('ignora variables desconocidas del sistema', () => {
     expect(validar({ ...minimo, PATH: '/usr/bin', NO_CONOCIDA: 'x' }).error).toBeUndefined();
   });
+
+  describe('llave de cifrado de datos sensibles (DATA_ENCRYPTION_KEY)', () => {
+    const prod = { ...minimo, ENVIRONMENT: 'prod', OTP_PEPPER: 'p'.repeat(32) };
+
+    it('en producción es obligatoria', () => {
+      const { error } = validar(prod);
+      expect(error?.message).toContain('DATA_ENCRYPTION_KEY');
+    });
+
+    it('en producción una cadena vacía cuenta como no definida', () => {
+      expect(validar({ ...prod, DATA_ENCRYPTION_KEY: '' }).error?.message).toContain('DATA_ENCRYPTION_KEY');
+    });
+
+    it('acepta 64 caracteres hexadecimales', () => {
+      expect(validar({ ...prod, DATA_ENCRYPTION_KEY: 'ab12'.repeat(16) }).error).toBeUndefined();
+    });
+
+    it('rechaza una llave que no tiene 64 caracteres hexadecimales', () => {
+      expect(validar({ ...minimo, DATA_ENCRYPTION_KEY: 'corta' }).error?.message).toContain('64 caracteres hexadecimales');
+      expect(validar({ ...minimo, DATA_ENCRYPTION_KEY: 'zz'.repeat(32) }).error).toBeDefined();
+    });
+
+    it('en local usa una llave de desarrollo, también si la variable viene en blanco', () => {
+      expect(validar(minimo).value.DATA_ENCRYPTION_KEY).toMatch(/^[0-9a-f]{64}$/);
+      expect(validar({ ...minimo, DATA_ENCRYPTION_KEY: '' }).value.DATA_ENCRYPTION_KEY).toMatch(/^[0-9a-f]{64}$/);
+    });
+  });
 });
