@@ -12,6 +12,7 @@ import { Documento } from './entities/documento.entity';
 import { Almacenamiento } from './storage/almacenamiento';
 
 const PERMITIDOS: Record<string, string[]> = { '.pdf': ['application/pdf'], '.txt': ['text/plain'] };
+const FIRMA_PDF = Buffer.from('%PDF-');
 /** Límite de texto enviado a la IA: reduce tokens y contexto (uso responsable de tokens). */
 export const MAX_CARACTERES_IA = 12000;
 
@@ -29,6 +30,10 @@ export class DocumentosService {
     const ext = path.extname(file.originalname).toLowerCase();
     if (!PERMITIDOS[ext] || !PERMITIDOS[ext].includes(file.mimetype)) {
       throw new UnprocessableEntityException('Solo se aceptan archivos .pdf o .txt');
+    }
+    // El tipo MIME lo declara el cliente: un .pdf debe empezar con la firma real de un PDF.
+    if (ext === '.pdf' && !file.buffer.subarray(0, 5).equals(FIRMA_PDF)) {
+      throw new UnprocessableEntityException('El archivo no es un PDF válido');
     }
     return this.guardar(user, casoId, file.originalname, file.buffer);
   }

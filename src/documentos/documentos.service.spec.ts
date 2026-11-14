@@ -40,6 +40,15 @@ describe('DocumentosService.subirArchivo (validación)', () => {
     await expect(crear().svc.subirArchivo(user, 'caso-1', archivo('falso.pdf', 'text/plain'))).rejects.toBeInstanceOf(UnprocessableEntityException);
   });
 
+  it('rechaza un .pdf que no empieza con la firma %PDF-', async () => {
+    await expect(crear().svc.subirArchivo(user, 'caso-1', archivo('falso.pdf', 'application/pdf', 'esto es texto'))).rejects.toBeInstanceOf(UnprocessableEntityException);
+  });
+
+  it('acepta un .pdf con la firma %PDF-', async () => {
+    const r = await crear().svc.subirArchivo(user, 'caso-1', archivo('real.pdf', 'application/pdf', '%PDF-1.7 contenido'));
+    expect(r.id).toBe('doc-1');
+  });
+
   it('rechaza un .txt cuyo tipo MIME no es text/plain', async () => {
     await expect(crear().svc.subirArchivo(user, 'caso-1', archivo('falso.txt', 'application/pdf'))).rejects.toBeInstanceOf(UnprocessableEntityException);
   });
