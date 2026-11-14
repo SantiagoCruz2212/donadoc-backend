@@ -1,0 +1,72 @@
+# Integración continua del backend: pruebas unitarias, compilación, integración con PostgreSQL real y construcción de la imagen.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruebas:
+    name: Pruebas unitarias y compilación
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+
+  integracion:
+    name: Integración con PostgreSQL real
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: donadoc
+          POSTGRES_PASSWORD: prueba_local # contraseña desechable solo del contenedor de prueba del CI
+          POSTGRES_DB: donadoc_int
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U donadoc -d donadoc_int"
+          --health-interval 5s --health-timeout 3s --health-retries 15
+    env:
+      INT_DB_HOST: localhost
+      INT_DB_PORT: 5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx jest --config test/jest-integration.json --runInBand
+
+  imagen:
+    name: Imagen Docker (sin publicar)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [pruebas, integracion]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
