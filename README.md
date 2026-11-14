@@ -73,6 +73,7 @@ npm start                # con ENVIRONMENT=local aplica las migraciones al arran
 | Sesión | `JWT_PRIVATE_KEY`, `JWT_PUBLIC_KEY`, `JWT_EXPIRES_IN` | Vacías generan un par efímero (solo desarrollo); en producción son obligatorias |
 | IA | `EXTRACTOR_IA_PROVIDER`, `GEMINI_API_KEY`, `GEMINI_MODEL`, `OLLAMA_URL`, `OLLAMA_MODEL`, `IA_TIMEOUT_MS`, `IA_MAX_INTENTOS`, `IA_UMBRAL_CONFIANZA` | Proveedor: `gemini`, `ollama` o `mock` |
 | Correo y OTP | `MAIL_PROVIDER`, `SMTP_*`, `MAIL_FROM`, `OTP_PEPPER`, `OTP_TTL_MIN`, `OTP_MAX_INTENTOS`, `OTP_REENVIO_SEG` | `consola` solo en local; `OTP_PEPPER` es obligatorio en producción |
+| Cifrado | `DATA_ENCRYPTION_KEY` | 64 caracteres hexadecimales (`openssl rand -hex 32`); obligatoria en producción. En local, si está vacía, se usa una llave de desarrollo. **Si se pierde, los datos cifrados no se recuperan** |
 | Archivos | `UPLOAD_DIR`, `MAX_UPLOAD_MB` | Si `MAX_UPLOAD_MB` no es válido se usan 5 MB |
 | Demostración | `SEED_ENABLED`, `SEED_TENANT_KEY`, `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | Crea una organización y un usuario la primera vez (solo local) |
 
@@ -113,12 +114,15 @@ Imagen de varias etapas, con usuario sin privilegios. La base de datos y las var
 - Contraseñas con bcrypt (costo 12) y respuesta de tiempo constante ante correos inexistentes.
 - Alcance por organización: lo que pertenece a otra organización responde 404.
 - Auditoría de solo inserción, protegida por un trigger de PostgreSQL.
+- Cifrado AES-256-GCM (IV aleatorio y etiqueta de autenticación) de los datos clínicos en la base de datos: datos diligenciados de los formatos, sugerencias de la IA (valor sugerido y final), respuesta cruda del proveedor de IA, causa de muerte, causa de contraindicación y causa de no rescate. La llave vive solo en `DATA_ENCRYPTION_KEY`. Detalle en `src/common/crypto/campo-cifrado.ts`.
 - Solo se aceptan `.pdf` (con firma `%PDF-`) y `.txt` de hasta 5 MB.
 - Sin secretos en el repositorio.
 
 ## Límites conocidos
 
-- Hoy los datos clínicos se guardan **sin cifrar** en la base de datos; cifrarlos es un issue abierto.
+- **Cifrado parcial:** siguen en claro en la base de datos el nombre, apellidos, número de documento y fecha de nacimiento del donante, el nombre del firmante y los informes periódicos. Cifrarlos exige un índice ciego (el documento tiene búsqueda y restricción de unicidad) y queda como mejora. Tampoco están cifrados los archivos de historias clínicas guardados en disco (`UPLOAD_DIR`).
+- Los datos guardados antes del cifrado se siguen leyendo, pero se cifran solo cuando se vuelven a guardar; no hay aún un script que cifre los existentes.
+- No hay rotación de llaves automática (el formato `enc:v1` deja el espacio para hacerla).
 - El inicio de sesión no cumple todavía el objetivo de responder en menos de 500 ms por el costo de bcrypt.
 - La firma es una **firma electrónica simple**; su validez legal debe confirmarla el área jurídica.
 - El adaptador SMTP no se ha probado contra un proveedor real, y Gemini no se ha probado con una clave real.
