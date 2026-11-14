@@ -302,7 +302,7 @@ describe('Extracción con IA, fallas del proveedor (se sustituye el puerto Extra
     try {
       const s = await crearSesion(app);
       const caso = await crearCaso(app, s.token);
-      const d = await api(app, s.token).post(`/casos/${caso.id}/documentos`).attach('archivo', Buffer.from('esto no es un pdf'), { filename: 'roto.pdf', contentType: 'application/pdf' });
+      const d = await api(app, s.token).post(`/casos/${caso.id}/documentos`).attach('archivo', Buffer.from('%PDF-1.4 cuerpo corrupto: no es un PDF legible'), { filename: 'roto.pdf', contentType: 'application/pdf' });
       const r = await extraer(app, s.token, caso.id, d.body.data.id);
       expect(r.status).toBe(201);
       expect(r.body.data.estado).toBe('ERROR');
