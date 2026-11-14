@@ -10,7 +10,9 @@ import { DocumentoVista } from './documentos.view';
 import { DocumentosService } from './documentos.service';
 
 // Límite de tamaño del archivo en memoria (variable MAX_UPLOAD_MB, 5 MB por defecto).
-const LIMITE_BYTES = Number(process.env.MAX_UPLOAD_MB ?? 5) * 1024 * 1024;
+// Un valor no numérico o menor que 1 (p. ej. "abc") daría NaN y desactivaría el límite: se usa el valor por defecto.
+const MB_CONFIGURADOS = Number(process.env.MAX_UPLOAD_MB);
+const LIMITE_BYTES = (Number.isFinite(MB_CONFIGURADOS) && MB_CONFIGURADOS >= 1 ? MB_CONFIGURADOS : 5) * 1024 * 1024;
 
 @ApiTags('documentos')
 @ApiBearerAuth()
