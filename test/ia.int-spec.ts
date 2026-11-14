@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 import { ExtractorIa, ExtractorIaError, ResultadoExtraccion, SolicitudExtraccion } from '../src/ia/ports/extractor-ia.port';
 import { api, crearApp, crearCaso, crearSesion, HISTORIA, Sesion, subirTexto } from './helpers';
 
-const PDF = readFileSync(resolve(__dirname, '../../docs/ejemplos/historia_clinica_sintetica.pdf'));
+const PDF = readFileSync(resolve(__dirname, '../docs/ejemplos/historia_clinica_sintetica.pdf'));
 const extraer = (app: INestApplication, token: string, casoId: string, documentoOrigenId: string) => api(app, token).post(`/casos/${casoId}/extracciones-ia`).send({ documentoOrigenId });
 
 describe('Extracción con IA, flujo completo con el simulador (API + PostgreSQL + almacenamiento reales)', () => {

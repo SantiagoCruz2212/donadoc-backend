@@ -5,7 +5,7 @@ import { INestApplication } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { api, crearApp, crearCaso, crearSesion, HISTORIA, Sesion } from './helpers';
 
-const PDF = readFileSync(resolve(__dirname, '../../docs/ejemplos/historia_clinica_sintetica.pdf'));
+const PDF = readFileSync(resolve(__dirname, '../docs/ejemplos/historia_clinica_sintetica.pdf'));
 
 describe('Documentos: carga de historias clínicas externas (API + PostgreSQL + almacenamiento reales)', () => {
   let app: INestApplication;
