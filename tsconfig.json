@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "declaration": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@common/*": ["src/common/*"],
+      "@database/*": ["src/database/*"],
+      "@audit/*": ["src/audit/*"],
+      "@tenants/*": ["src/tenants/*"],
+      "@users/*": ["src/users/*"],
+      "@auth/*": ["src/auth/*"],
+      "@casos/*": ["src/casos/*"],
+      "@documentos/*": ["src/documentos/*"],
+      "@ia/*": ["src/ia/*"],
+      "@health/*": ["src/health/*"],
+      "@correo/*": ["src/correo/*"],
+      "@otp/*": ["src/otp/*"],
+      "@red/*": ["src/red/*"],
+      "@formatos/*": ["src/formatos/*"],
+      "@firmas/*": ["src/firmas/*"]
+    },
+    "incremental": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

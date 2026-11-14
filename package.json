@@ -1,0 +1,96 @@
+{
+  "name": "donadoc-backend",
+  "version": "0.2.0",
+  "description": "DonaDoc: API backend (NestJS) para gestionar la documentación de donación y trasplante",
+  "private": true,
+  "scripts": {
+    "build": "nest build && tsc-alias -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch",
+    "migration:run": "node dist/database/migrate.js",
+    "test": "jest",
+    "test:cov": "jest --coverage"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/passport": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/swagger": "^11.0.0",
+    "@nestjs/terminus": "^11.0.0",
+    "@nestjs/throttler": "^6.0.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "compression": "^1.7.5",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "nodemailer": "^10.4.0",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.20.2",
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.20",
+    "typeorm-naming-strategies": "^4.1.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@nestjs/testing": "^11.2.8",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/compression": "^1.7.5",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.10.0",
+    "@types/nodemailer": "^8.0.2",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/pdf-parse": "^1.1.4",
+    "@types/supertest": "^6.0.3",
+    "@types/pdfkit": "^0.17.7",
+    "jest": "^29.7.0",
+    "supertest": "^7.3.2",
+    "ts-jest": "^29.2.5",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.7.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "setupFiles": [
+      "reflect-metadata"
+    ],
+    "moduleNameMapper": {
+      "^@common/(.*)$": "<rootDir>/common/$1",
+      "^@database/(.*)$": "<rootDir>/database/$1",
+      "^@audit/(.*)$": "<rootDir>/audit/$1",
+      "^@tenants/(.*)$": "<rootDir>/tenants/$1",
+      "^@users/(.*)$": "<rootDir>/users/$1",
+      "^@auth/(.*)$": "<rootDir>/auth/$1",
+      "^@casos/(.*)$": "<rootDir>/casos/$1",
+      "^@documentos/(.*)$": "<rootDir>/documentos/$1",
+      "^@ia/(.*)$": "<rootDir>/ia/$1",
+      "^@health/(.*)$": "<rootDir>/health/$1",
+      "^@correo/(.*)$": "<rootDir>/correo/$1",
+      "^@otp/(.*)$": "<rootDir>/otp/$1",
+      "^@red/(.*)$": "<rootDir>/red/$1",
+      "^@formatos/(.*)$": "<rootDir>/formatos/$1",
+      "^@firmas/(.*)$": "<rootDir>/firmas/$1"
+    }
+  }
+}

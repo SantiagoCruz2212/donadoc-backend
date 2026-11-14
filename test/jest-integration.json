@@ -1,0 +1,35 @@
+{
+  "rootDir": "..",
+  "testRegex": "test/.*\\.int-spec\\.ts$",
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "transform": {
+    "^.+\\.ts$": "ts-jest"
+  },
+  "testEnvironment": "node",
+  "testTimeout": 60000,
+  "setupFiles": [
+    "reflect-metadata",
+    "<rootDir>/test/setup-env.ts"
+  ],
+  "moduleNameMapper": {
+    "^@common/(.*)$": "<rootDir>/src/common/$1",
+    "^@database/(.*)$": "<rootDir>/src/database/$1",
+    "^@audit/(.*)$": "<rootDir>/src/audit/$1",
+    "^@tenants/(.*)$": "<rootDir>/src/tenants/$1",
+    "^@users/(.*)$": "<rootDir>/src/users/$1",
+    "^@auth/(.*)$": "<rootDir>/src/auth/$1",
+    "^@casos/(.*)$": "<rootDir>/src/casos/$1",
+    "^@documentos/(.*)$": "<rootDir>/src/documentos/$1",
+    "^@ia/(.*)$": "<rootDir>/src/ia/$1",
+    "^@health/(.*)$": "<rootDir>/src/health/$1",
+    "^@correo/(.*)$": "<rootDir>/src/correo/$1",
+    "^@otp/(.*)$": "<rootDir>/src/otp/$1",
+    "^@red/(.*)$": "<rootDir>/src/red/$1",
+    "^@formatos/(.*)$": "<rootDir>/src/formatos/$1",
+    "^@firmas/(.*)$": "<rootDir>/src/firmas/$1"
+  }
+}
