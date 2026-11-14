@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, rmSync } from 'fs';
 import { join, resolve } from 'path';
 import { INestApplication } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import { descifrarTexto } from '../src/common/crypto/campo-cifrado';
 import { ExtractorIa, ExtractorIaError, ResultadoExtraccion, SolicitudExtraccion } from '../src/ia/ports/extractor-ia.port';
 import { api, crearApp, crearCaso, crearSesion, HISTORIA, Sesion, subirTexto } from './helpers';
 
@@ -98,7 +99,8 @@ describe('Extracción con IA, flujo completo con el simulador (API + PostgreSQL 
       expect(r.status).toBe(200);
       expect(r.body.data).toMatchObject({ decision: 'ACEPTADA', valorFinal: sug[0].valorSugerido });
       const [f] = await ds.query('SELECT decision, valor_final, decidido_por, decidido_en FROM sugerencias_ia WHERE id = $1', [sug[0].id]);
-      expect(f).toMatchObject({ decision: 'ACEPTADA', valor_final: sug[0].valorSugerido, decidido_por: s.userId });
+      expect(f).toMatchObject({ decision: 'ACEPTADA', decidido_por: s.userId });
+      expect(descifrarTexto(f.valor_final)).toBe(sug[0].valorSugerido); // en la base está cifrado (ver cifrado.int-spec.ts)
       expect(f.decidido_en).toBeInstanceOf(Date);
     });
 

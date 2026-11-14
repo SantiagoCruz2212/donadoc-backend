@@ -1,3 +1,4 @@
+import { jsonCifrado, textoCifrado } from '@common/crypto/campo-cifrado';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Donante } from './donante.entity';
 
@@ -14,8 +15,8 @@ export class Caso {
   @Column({ default: 'BORRADOR' }) estado: string;
   @Column({ type: 'varchar', nullable: true }) tipoDonante: string | null;
   @Column({ default: false }) muerteViolenta: boolean;
-  @Column({ type: 'varchar', nullable: true }) causaMuerte: string | null;
-  @Column({ type: 'text', nullable: true }) causaContraindicacion: string | null;
+  @Column({ type: 'text', nullable: true, transformer: textoCifrado }) causaMuerte: string | null;
+  @Column({ type: 'text', nullable: true, transformer: textoCifrado }) causaContraindicacion: string | null;
   @CreateDateColumn({ type: 'timestamptz' }) creadoEn: Date;
   @UpdateDateColumn({ type: 'timestamptz' }) actualizadoEn: Date;
   @Column({ type: 'timestamptz', nullable: true }) eliminadoEn: Date | null;

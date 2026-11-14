@@ -1,3 +1,4 @@
+import { jsonCifrado, textoCifrado } from '@common/crypto/campo-cifrado';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { SugerenciaIa } from './sugerencia-ia.entity';
 
@@ -14,7 +15,7 @@ export class ExtraccionIa {
   @Column({ type: 'uuid', nullable: true }) solicitadoPor: string | null;
   @CreateDateColumn({ type: 'timestamptz' }) solicitadoEn: Date;
   @Column({ type: 'timestamptz', nullable: true }) respondidoEn: Date | null;
-  @Column({ type: 'jsonb', nullable: true }) respuestaJson: unknown;
+  @Column({ type: 'jsonb', nullable: true, transformer: jsonCifrado }) respuestaJson: unknown;
   @OneToMany(() => SugerenciaIa, (s) => s.extraccion)
   sugerencias: SugerenciaIa[];
 }
