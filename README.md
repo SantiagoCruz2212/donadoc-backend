@@ -1,5 +1,7 @@
 # DonaDoc Backend
 
+[![CI](https://github.com/SantiagoCruz2212/donadoc-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/SantiagoCruz2212/donadoc-backend/actions/workflows/ci.yml)
+
 API de **DonaDoc**, una plataforma web para **diligenciar una sola vez** los formatos del INS de donación y trasplante de órganos y tejidos, en lugar de transcribir a mano unos 23 formatos con datos repetidos.
 Proyecto integrador del *Diplomado en Ingeniería de Software Asistida por IA*. Autor: Santiago Andrés Castro Cruz.
 
