@@ -5,6 +5,7 @@ import { AuditModule } from '@audit/audit.module';
 import { CasosModule } from '@casos/casos.module';
 import { DocumentosModule } from '@documentos/documentos.module';
 import { GeminiExtractor } from './adapters/gemini.extractor';
+import { GroqExtractor } from './adapters/groq.extractor';
 import { MockExtractor } from './adapters/mock.extractor';
 import { OllamaExtractor } from './adapters/ollama.extractor';
 import { ExtraccionIa } from './entities/extraccion-ia.entity';
@@ -20,6 +21,8 @@ export function crearExtractor(cfg: ConfigService): ExtractorIa {
   switch (cfg.get<string>('EXTRACTOR_IA_PROVIDER')) {
     case 'ollama':
       return new OllamaExtractor(cfg.get<string>('OLLAMA_URL') as string, cfg.get<string>('OLLAMA_MODEL') as string);
+    case 'groq':
+      return new GroqExtractor(cfg.get<string>('GROQ_API_KEY') ?? '', cfg.get<string>('GROQ_MODEL') as string);
     case 'mock':
       return new MockExtractor();
     default:
