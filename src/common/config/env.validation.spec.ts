@@ -31,7 +31,7 @@ describe('Validación de variables de entorno (la aplicación no arranca si falt
     expect(validar({ ...minimo, EXTRACTOR_IA_PROVIDER: 'openai' }).error).toBeDefined();
   });
 
-  it.each(['gemini', 'ollama', 'mock'])('acepta el proveedor de IA «%s»', (p) => {
+  it.each(['gemini', 'ollama', 'groq', 'mock'])('acepta el proveedor de IA «%s»', (p) => {
     expect(validar({ ...minimo, EXTRACTOR_IA_PROVIDER: p }).error).toBeUndefined();
   });
 

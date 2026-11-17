@@ -23,9 +23,11 @@ export const envSchema = Joi.object({
   UPLOAD_DIR: Joi.string().default('./uploads'),
   MAX_UPLOAD_MB: Joi.number().default(5),
 
-  EXTRACTOR_IA_PROVIDER: Joi.string().valid('gemini', 'ollama', 'mock').default('gemini'),
+  EXTRACTOR_IA_PROVIDER: Joi.string().valid('gemini', 'ollama', 'groq', 'mock').default('gemini'),
   GEMINI_API_KEY: Joi.string().allow('').optional(),
   GEMINI_MODEL: Joi.string().default('gemini-2.5-flash'),
+  GROQ_API_KEY: Joi.string().allow('').optional(),
+  GROQ_MODEL: Joi.string().default('llama-3.3-70b-versatile'),
   OLLAMA_URL: Joi.string().default('http://localhost:11434'),
   OLLAMA_MODEL: Joi.string().default('llama3.1:8b'),
   IA_TIMEOUT_MS: Joi.number().default(120000),
