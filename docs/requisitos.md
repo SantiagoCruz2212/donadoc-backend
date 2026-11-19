@@ -42,7 +42,7 @@ Como **coordinador de trasplantes**, quiero que la IA sugiera los datos de la hi
 - Dado que el proveedor de IA falla o se agota el tiempo, cuando pido la extracción, entonces el documento no se pierde y la extracción queda pendiente.
 - Dado un PDF corrupto, cuando pido la extracción, entonces termina en ERROR con un mensaje claro y no con un 500.
 
-Estado: **Hecha en local** (Ollama validado con F1 0,968; con Gemini falta probar con una clave real). **Pendiente** verla funcionando en la URL pública.
+Estado: **Hecha** (Ollama validado con F1 0,968 en local; en la URL pública responde con Groq, modelo `openai/gpt-oss-120b`, 5 sugerencias con su confianza sobre la historia sintética)
 
 ### HU-04: Diligenciar un formato y generar el PDF
 Como **coordinador de trasplantes**, quiero diligenciar un formato oficial con lo conocido ya precargado y obtener su PDF, para entregar el documento completo.
@@ -82,7 +82,7 @@ Como **docente evaluador**, quiero abrir la aplicación en una URL pública, par
 - Dado un usuario de demostración, cuando inicio sesión, entonces recorro el flujo completo hasta el PDF.
 - Dado el repositorio público, cuando reviso sus archivos, entonces no hay ninguna llave, clave ni token (solo `.env.example` en blanco).
 
-Estado: **Pendiente** (el despliegue automatizado existe y se probó con Docker en local; no se ha desplegado en un servidor real)
+Estado: **Hecha** (frontend y backend en Vercel, base de datos y archivos en Supabase; cada push a `main` redespliega solo)
 
 ### HU-09: Conocer cómo se usa y cómo se despliega
 Como **nuevo integrante o evaluador**, quiero un README actualizado, un manual de usuario y un manual de despliegue, para entender qué hace el sistema y ponerlo en marcha.
@@ -90,7 +90,7 @@ Como **nuevo integrante o evaluador**, quiero un README actualizado, un manual d
 - Dado el manual de usuario, cuando lo sigo, entonces puedo completar el flujo de HU-02 a HU-05.
 - Dado el manual de despliegue, cuando lo sigo, entonces sé qué secretos y qué servidor necesito.
 
-Estado: **Pendiente** (los repositorios nuevos tienen un README mínimo)
+Estado: **Parcial** (README con problema, stack, variables y demo en línea; manual de despliegue y documento de uso de IA hechos. **Pendiente** el manual de usuario con capturas)
 
 ### HU-10: Verificar cada cambio con pruebas automáticas
 Como **desarrollador**, quiero que cada push ejecute las pruebas, para detectar errores antes de fusionar.
@@ -98,17 +98,17 @@ Como **desarrollador**, quiero que cada push ejecute las pruebas, para detectar 
 - Dado un cambio que rompe una prueba, cuando corre el CI, entonces falla y lo muestra.
 - Dado un CI en verde, cuando se construye la imagen Docker, entonces se construye sin publicarse.
 
-Estado: **Hecha** (CI en verde en los dos repositorios). **Pendiente** traer al repositorio las pruebas funcionales y de rendimiento del módulo 4.
+Estado: **Hecha** (CI en verde en los dos repositorios; las pruebas de rendimiento corren en el CI del backend y las funcionales de navegador están en `donadoc-frontend/pruebas`, sin correr en el CI)
 
 ## No funcionales
 
 | Atributo | Requisito medible | Estado |
 |---|---|---|
 | Rendimiento | La API responde en menos de 500 ms en el 95 % de las peticiones (excepto el inicio de sesión) | Cumple en las pruebas del módulo 4 (8 de 9 objetivos) |
-| Rendimiento (login) | El inicio de sesión responde en menos de 500 ms con bcrypt | **No cumple** hoy (el costo 12 de bcrypt lo supera); decidir entre bajar el costo o relajar el objetivo |
+| Rendimiento (login) | El inicio de sesión de un usuario responde en menos de 500 ms (p95) con bcrypt de costo 10 | Cumple medido en el CI. Con 5 inicios simultáneos y sostenidos el CI midió ~770 ms, por eso ese escenario tiene objetivo propio de 1000 ms (ver `pruebas/LEEME.md`) |
 | Seguridad | Contraseñas con hash bcrypt; ninguna llave de API, clave ni token en el repositorio | Cumple (revisado antes de publicar; `.env.example` en blanco) |
 | Seguridad | Todo endpoint privado exige JWT; lo de otra organización responde 404 | Cumple (31 operaciones verificadas) |
-| Disponibilidad | La URL pública responde durante toda la sustentación (19 de noviembre) | Pendiente (depende de HU-08) |
+| Disponibilidad | La URL pública responde durante toda la sustentación (19 de noviembre) | URL en línea y verificada el 19 de nov; falta confirmarlo durante la sustentación |
 | Usabilidad | Una persona nueva completa el flujo (crear caso, cargar historia, aceptar sugerencias) en menos de 5 minutos con el manual | Pendiente de medir |
 
 ## Cambios frente a la IA

@@ -14,6 +14,16 @@ Quien coordina un programa de trasplantes (caso real de una coordinadora de tras
 - **Usuarios:** coordinador/a de trasplantes (usa la aplicación), administrador de la organización y el paciente o familiar (solo confirma su firma).
 - **Flujo:** iniciar sesión → crear un caso → cargar una historia clínica (`.pdf`, `.txt` o texto pegado) → extraer datos con IA → diligenciar un formato → PDF → firma con código de un solo uso → documento firmado e inmodificable.
 
+## Demo en línea
+
+| Pieza | URL |
+|---|---|
+| Aplicación (frontend) | https://donadoc-frontend.vercel.app |
+| API (backend) | https://donadoc-backend.vercel.app (`/health` y `/health/ready`) |
+
+Desplegado en Vercel (frontend y backend como función serverless) con base de datos y archivos en Supabase y extracción de datos con Groq.
+Las credenciales de prueba se entregan aparte (no están en el repositorio). Cómo se desplegó: [docs/despliegue.md](docs/despliegue.md).
+
 ## Documentación
 
 | Documento | Contenido |
