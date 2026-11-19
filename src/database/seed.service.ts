@@ -35,7 +35,7 @@ export class SeedService implements OnApplicationBootstrap {
     if (!(await this.users.existe(org.id, correo))) {
       await this.users.crear({
         organizacionId: org.id, correo, nombre: 'Coordinación Demo', rol: 'ADMIN_ORG', perfil: 'COORDINADOR',
-        hashClave: await bcrypt.hash(pass, 12),
+        hashClave: await bcrypt.hash(pass, 10),
       });
       this.logger.log(`Usuario demo creado: ${correo}`);
     }

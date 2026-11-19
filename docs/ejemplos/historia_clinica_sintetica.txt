@@ -1,0 +1,9 @@
+HISTORIA CLÍNICA (DATOS SINTÉTICOS DE PRUEBA, NO CORRESPONDE A UNA PERSONA REAL)
+Institución de origen: IPS Ejemplo del Valle
+Paciente: Juan Pérez, 34 años, masculino.
+Fecha de ingreso: 2026-10-27
+Diagnóstico principal: Traumatismo craneoencefálico severo con herniación cerebral
+Causa de muerte: Muerte encefálica secundaria a traumatismo craneoencefálico
+Antecedentes: Sin enfermedades crónicas. No fumador. Sin cirugías previas.
+Grupo sanguíneo: O positivo
+Evolución: Ingresa en estado crítico tras accidente de tránsito. Se confirma muerte encefálica con dos valoraciones independientes y prueba de apnea positiva. Se informa a la coordinación de trasplantes.
