@@ -12,7 +12,7 @@ import { LoginDto } from './dto/login.dto';
 import { SesionVista, toSesionVista } from './auth.view';
 
 // Hash de relleno para que el tiempo de respuesta no revele si el correo o la organización existen (anti-enumeración).
-const BCRYPT_COSTO = 12;
+const BCRYPT_COSTO = 10; // mínimo recomendado por OWASP para bcrypt; los hashes antiguos de costo 12 siguen siendo válidos
 const DUMMY_HASH = bcrypt.hashSync('relleno-anti-enumeracion', BCRYPT_COSTO);
 const PROPOSITO_RESET = 'reset-clave';
 

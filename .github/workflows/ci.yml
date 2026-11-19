@@ -70,3 +70,49 @@ jobs:
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  rendimiento:
+    name: Rendimiento de la API
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [pruebas]
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: donadoc
+          POSTGRES_PASSWORD: prueba_local # contraseña desechable solo del contenedor de prueba del CI
+          POSTGRES_DB: donadoc_perf
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U donadoc -d donadoc_perf"
+          --health-interval 5s --health-timeout 3s --health-retries 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Iniciar el backend (IA simulada, usuario demo desechable)
+        run: |
+          export ADMIN_PASSWORD="$(openssl rand -hex 12)"
+          echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> "$GITHUB_ENV"
+          echo "::add-mask::$ADMIN_PASSWORD"
+          ENVIRONMENT=local PORT=3000 DB_HOST=localhost DB_PORT=5432 DB_USER=donadoc DB_PASSWORD=prueba_local DB_NAME=donadoc_perf \
+          EXTRACTOR_IA_PROVIDER=mock SEED_ENABLED=true SEED_ADMIN_PASSWORD="$ADMIN_PASSWORD" \
+          DATA_ENCRYPTION_KEY="$(openssl rand -hex 32)" FRONTEND_URL=http://localhost:8080 UPLOAD_DIR=/tmp/uploads \
+          nohup node dist/main.js > backend.log 2>&1 &
+          for i in $(seq 1 40); do curl -fs http://127.0.0.1:3000/health && break; sleep 2; done
+      - run: npm install
+        working-directory: pruebas
+      - run: npm run rendimiento
+        working-directory: pruebas
+        env:
+          API_URL: http://127.0.0.1:3000
+          DURACION: 5
+      - name: Registro del backend si algo falla
+        if: failure()
+        run: tail -n 60 backend.log

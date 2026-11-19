@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci",
+  "outputDirectory": "public",
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 60,
+      "includeFiles": "{dist/**,node_modules/pdfkit/js/data/**}"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
+}

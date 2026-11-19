@@ -1,0 +1,9 @@
+{
+  "name": "donadoc-pruebas-rendimiento",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pruebas de rendimiento de la API de DonaDoc",
+  "scripts": { "rendimiento": "node rendimiento/rendimiento.mjs" },
+  "devDependencies": { "autocannon": "^8.0.0" }
+}

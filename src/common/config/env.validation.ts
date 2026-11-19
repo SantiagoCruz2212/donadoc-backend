@@ -21,6 +21,12 @@ export const envSchema = Joi.object({
   CORS_EXTRA_ORIGINS: Joi.string().allow('').default(''),
 
   UPLOAD_DIR: Joi.string().default('./uploads'),
+  // Dónde se guardan los archivos: disco local (UPLOAD_DIR) o Supabase Storage (necesario en Vercel, que no tiene disco persistente).
+  STORAGE_PROVIDER: Joi.string().valid('local', 'supabase').default('local'),
+  SUPABASE_URL: Joi.string().uri().when('STORAGE_PROVIDER', { is: 'supabase', then: Joi.required(), otherwise: Joi.string().allow('').optional() }),
+  SUPABASE_SERVICE_KEY: Joi.string().when('STORAGE_PROVIDER', { is: 'supabase', then: Joi.required(), otherwise: Joi.string().allow('').optional() }),
+  SUPABASE_BUCKET: Joi.string().default('documentos'),
+  DB_POOL_MAX: Joi.number().min(1).default(10), // en serverless use un valor bajo (p. ej. 3): cada instancia abre su propio pool
   MAX_UPLOAD_MB: Joi.number().default(5),
 
   EXTRACTOR_IA_PROVIDER: Joi.string().valid('gemini', 'ollama', 'groq', 'mock').default('gemini'),
