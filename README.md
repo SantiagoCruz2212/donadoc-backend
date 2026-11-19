@@ -86,7 +86,7 @@ Nunca escriba claves, contraseñas ni tokens en el repositorio.
 ### IA gratuita
 
 - **Gemini:** cree una clave gratuita en <https://aistudio.google.com/apikey> y póngala solo en su `.env` (`GEMINI_API_KEY`). Use datos sintéticos; los identificadores se enmascaran antes de enviar el texto.
-- **Groq:** cree una cuenta y una llave en <https://console.groq.com/keys>, póngala solo en su `.env` (`GROQ_API_KEY`) y use `EXTRACTOR_IA_PROVIDER=groq`. Es un proveedor externo: los identificadores se enmascaran antes de enviar el texto. El modelo se elige con `GROQ_MODEL` (por defecto `llama-3.3-70b-versatile`); los modelos disponibles y los límites de la capa gratuita cambian, verifíquelos en <https://console.groq.com/docs>.
+- **Groq:** cree una cuenta y una llave en <https://console.groq.com/keys>, póngala solo en su `.env` (`GROQ_API_KEY`) y use `EXTRACTOR_IA_PROVIDER=groq`. Es un proveedor externo: los identificadores se enmascaran antes de enviar el texto. El modelo se elige con `GROQ_MODEL` (por defecto `openai/gpt-oss-120b`); los modelos disponibles y los límites de la capa gratuita cambian, verifíquelos en <https://console.groq.com/docs>.
 - **Ollama:** instale [Ollama](https://ollama.com), ejecute `ollama pull llama3.1:8b` y use `EXTRACTOR_IA_PROVIDER=ollama`. Los datos no salen del equipo.
 - **mock:** simula una extracción sin IA; sirve para probar el flujo sin red ni cuota. La interfaz muestra siempre el proveedor usado.
 

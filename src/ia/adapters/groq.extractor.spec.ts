@@ -10,7 +10,7 @@ describe('GroqExtractor', () => {
   afterEach(() => fetchMock.mockReset());
   afterAll(() => fetchMock.mockRestore());
 
-  const extractor = () => new GroqExtractor('clave-de-prueba', 'llama-3.3-70b-versatile');
+  const extractor = () => new GroqExtractor('clave-de-prueba', 'openai/gpt-oss-120b');
   const falla = async (p: Promise<unknown>) => p.then(() => null, (e: ExtractorIaError) => e);
 
   it('sin clave configurada falla con CONFIGURACION y ni siquiera llama a la red', async () => {
@@ -29,14 +29,14 @@ describe('GroqExtractor', () => {
     expect(url).not.toContain('clave-de-prueba');
     expect((init.headers as Record<string, string>).authorization).toBe('Bearer clave-de-prueba');
     const cuerpo = JSON.parse(init.body as string);
-    expect(cuerpo.model).toBe('llama-3.3-70b-versatile');
+    expect(cuerpo.model).toBe('openai/gpt-oss-120b');
     expect(cuerpo.temperature).toBe(0);
     expect(cuerpo.response_format).toEqual({ type: 'json_object' });
     const prompt = cuerpo.messages[0].content as string;
     expect(cuerpo.messages[0].role).toBe('user');
     expect(prompt).not.toMatch(/1000000001|juan@correo/);
     expect(prompt).toContain('[ID]');
-    expect(r).toEqual({ proveedor: 'GROQ', modelo: 'llama-3.3-70b-versatile', sugerencias: [{ campo: 'diagnosticoPrincipal', valor: 'sepsis', confianza: 0.9 }] });
+    expect(r).toEqual({ proveedor: 'GROQ', modelo: 'openai/gpt-oss-120b', sugerencias: [{ campo: 'diagnosticoPrincipal', valor: 'sepsis', confianza: 0.9 }] });
   });
 
   it('permite cambiar la URL base y tolera una barra final', async () => {

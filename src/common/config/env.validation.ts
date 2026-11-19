@@ -33,7 +33,7 @@ export const envSchema = Joi.object({
   GEMINI_API_KEY: Joi.string().allow('').optional(),
   GEMINI_MODEL: Joi.string().default('gemini-2.5-flash'),
   GROQ_API_KEY: Joi.string().allow('').optional(),
-  GROQ_MODEL: Joi.string().default('llama-3.3-70b-versatile'),
+  GROQ_MODEL: Joi.string().default('openai/gpt-oss-120b'),
   OLLAMA_URL: Joi.string().default('http://localhost:11434'),
   OLLAMA_MODEL: Joi.string().default('llama3.1:8b'),
   IA_TIMEOUT_MS: Joi.number().default(120000),
