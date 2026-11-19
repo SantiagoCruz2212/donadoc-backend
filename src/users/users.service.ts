@@ -24,6 +24,20 @@ export class UsersService {
     await this.repo.update({ id }, { hashClave });
   }
 
+  /** Accesos de una organización (sin los borrados), los más recientes primero. */
+  listarDeOrganizacion(organizacionId: string): Promise<Usuario[]> {
+    return this.repo.createQueryBuilder('u').where('u.organizacionId = :organizacionId AND u.eliminadoEn IS NULL', { organizacionId }).orderBy('u.creadoEn', 'DESC').getMany();
+  }
+
+  buscarEnOrganizacion(organizacionId: string, id: string): Promise<Usuario | null> {
+    return this.repo.findOne({ where: { id, organizacionId } }).then((u) => (u && !u.eliminadoEn ? u : null));
+  }
+
+  /** Borrado físico: solo para deshacer un acceso recién creado cuyo correo no se pudo enviar. */
+  async borrar(id: string): Promise<void> {
+    await this.repo.delete({ id });
+  }
+
   existe(organizacionId: string, correo: string): Promise<boolean> {
     return this.repo.exists({ where: { organizacionId, correo: correo.toLowerCase() } });
   }

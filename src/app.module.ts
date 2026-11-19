@@ -4,6 +4,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { AccesosModule } from './accesos/accesos.module';
 import { AuditModule } from '@audit/audit.module';
 import { AuthModule } from '@auth/auth.module';
 import { JwtAuthGuard } from '@auth/guards/jwt-auth.guard';
@@ -58,6 +59,7 @@ import { UsersModule } from '@users/users.module';
     TenantsModule,
     UsersModule,
     AuthModule,
+    AccesosModule,
     DatabaseModule,
     CasosModule,
     DocumentosModule,

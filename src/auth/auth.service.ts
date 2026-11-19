@@ -5,6 +5,7 @@ import { AuditService } from '@audit/audit.service';
 import { EnviadorCorreo } from '@correo/enviador-correo';
 import { AuthUser } from '@common/types/auth-user';
 import { enSegundoPlano } from '@common/async/segundo-plano';
+import { BCRYPT_COSTO } from '@common/crypto/clave-aleatoria';
 import { OtpService } from '@otp/otp.service';
 import { Organizacion } from '@tenants/entities/organizacion.entity';
 import { UsersService } from '@users/users.service';
@@ -13,7 +14,6 @@ import { LoginDto } from './dto/login.dto';
 import { SesionVista, toSesionVista } from './auth.view';
 
 // Hash de relleno para que el tiempo de respuesta no revele si el correo o la organización existen (anti-enumeración).
-const BCRYPT_COSTO = 10; // mínimo recomendado por OWASP para bcrypt; los hashes antiguos de costo 12 siguen siendo válidos
 const DUMMY_HASH = bcrypt.hashSync('relleno-anti-enumeracion', BCRYPT_COSTO);
 const PROPOSITO_RESET = 'reset-clave';
 
