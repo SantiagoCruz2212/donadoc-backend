@@ -42,7 +42,8 @@ const casoId = caso.json.data.id, docId = doc.json.data.id;
 // Objetivos (definidos antes de medir): p95 máximo en ms y 0 % de respuestas no exitosas
 const ESCENARIOS = [
   { id: 'RN-01', nombre: 'GET /health (liveness)', conexiones: 10, p95: 50, solicitud: () => ({ method: 'GET', path: '/health' }), base: BASE },
-  { id: 'RN-02', nombre: 'POST /auth/login (bcrypt)', conexiones: 5, p95: 500, solicitud: () => ({ method: 'POST', path: '/api/v1/auth/login', headers: { ...json, 'x-tenant-key': TENANT }, body: JSON.stringify({ correo: EMAIL, clave: CLAVE }) }) },
+  { id: 'RN-02', nombre: 'POST /auth/login (bcrypt), 1 usuario a la vez', conexiones: 1, p95: 500, solicitud: () => ({ method: 'POST', path: '/api/v1/auth/login', headers: { ...json, 'x-tenant-key': TENANT }, body: JSON.stringify({ correo: EMAIL, clave: CLAVE }) }) },
+  { id: 'RN-02b', nombre: 'POST /auth/login (bcrypt), 5 usuarios simultáneos', conexiones: 5, p95: 1000, solicitud: () => ({ method: 'POST', path: '/api/v1/auth/login', headers: { ...json, 'x-tenant-key': TENANT }, body: JSON.stringify({ correo: EMAIL, clave: CLAVE }) }) },
   { id: 'RN-03', nombre: 'POST /casos (crear caso y donante)', conexiones: 10, p95: 500, solicitud: () => ({ method: 'POST', path: '/api/v1/casos', headers: { ...json, ...auth }, body: JSON.stringify({ donante: { tipoDocumento: 'CC', numeroDocumento: `${Date.now()}${(Math.random() * 1e6) | 0}`.slice(-12), nombres: 'Carga', apellidos: 'Sintética' }, tipoDonante: 'TOTIPOTENCIAL', muerteViolenta: false }) }) },
   { id: 'RN-04', nombre: 'GET /casos?pageSize=20 (listado paginado)', conexiones: 20, p95: 300, solicitud: () => ({ method: 'GET', path: '/api/v1/casos?page=1&pageSize=20', headers: auth }) },
   { id: 'RN-05', nombre: 'GET /casos/{id} (detalle)', conexiones: 20, p95: 200, solicitud: () => ({ method: 'GET', path: `/api/v1/casos/${casoId}`, headers: auth }) },
