@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { AuditService } from '@audit/audit.service';
 import { EnviadorCorreo } from '@correo/enviador-correo';
 import { AuthUser } from '@common/types/auth-user';
+import { enSegundoPlano } from '@common/async/segundo-plano';
 import { OtpService } from '@otp/otp.service';
 import { Organizacion } from '@tenants/entities/organizacion.entity';
 import { UsersService } from '@users/users.service';
@@ -42,17 +43,17 @@ export class AuthService {
 
   /**
    * «Olvidé mi contraseña»: envía un código OTP al correo si la cuenta existe. La respuesta es siempre la misma
-   * (exista o no la cuenta) y el envío no se espera, para no revelar qué correos están registrados.
+   * (exista o no la cuenta) y el envío no se espera (salvo en serverless, donde se espera porque la función se congela al responder), para no revelar qué correos están registrados.
    */
   async solicitarRestablecimiento(tenant: Organizacion | null, correo: string, ip?: string): Promise<void> {
     const user = tenant ? await this.users.findActiveByEmail(tenant.id, correo) : null;
     await this.audit.log({ organizacionId: tenant?.id ?? null, usuarioId: user?.id ?? null, entidad: 'sesion', accion: 'CLAVE_OLVIDADA', ip });
     if (!tenant || !user) return;
-    void this.otp
-      .enviar(PROPOSITO_RESET, `${tenant.id}:${user.correo}`, user.correo, 'Código para restablecer su contraseña de DonaDoc', (codigo, min) =>
+    await enSegundoPlano(
+      this.otp.enviar(PROPOSITO_RESET, `${tenant.id}:${user.correo}`, user.correo, 'Código para restablecer su contraseña de DonaDoc', (codigo, min) =>
         `Su código de verificación es ${codigo}.\nVence en ${min} minutos y solo sirve una vez.\nSi usted no lo solicitó, ignore este mensaje: su contraseña no cambia.`,
-      )
-      .catch(() => undefined);
+      ),
+    );
   }
 
   /** Cambia la contraseña con el código recibido por correo. Cualquier fallo responde igual: código inválido o vencido. */
@@ -65,7 +66,7 @@ export class AuthService {
     }
     await this.users.actualizarClave(user.id, await bcrypt.hash(dto.nuevaClave, BCRYPT_COSTO));
     await this.audit.log({ organizacionId: tenant.id, usuarioId: user.id, entidad: 'usuario', entidadId: user.id, accion: 'CLAVE_RESTABLECIDA', ip });
-    this.avisarCambio(user.correo);
+    await this.avisarCambio(user.correo);
   }
 
   /** Cambio de contraseña con sesión iniciada: exige la contraseña actual. */
@@ -80,13 +81,14 @@ export class AuthService {
     if (dto.claveActual === dto.nuevaClave) throw new BadRequestException('La nueva contraseña debe ser distinta de la actual');
     await this.users.actualizarClave(user.id, await bcrypt.hash(dto.nuevaClave, BCRYPT_COSTO));
     await this.audit.log({ organizacionId: user.organizacionId, usuarioId: user.id, entidad: 'usuario', entidadId: user.id, accion: 'CLAVE_CAMBIADA', ip });
-    this.avisarCambio(user.correo);
+    await this.avisarCambio(user.correo);
   }
 
   /** Aviso de seguridad: si no fue la persona, puede reaccionar. No bloquea ni falla la operación. */
-  private avisarCambio(correo: string): void {
-    void this.correo
-      .enviar(correo, 'Su contraseña de DonaDoc fue cambiada', 'Le informamos que la contraseña de su cuenta DonaDoc acaba de cambiar.\nSi no fue usted, restablézcala de inmediato desde «Olvidé mi contraseña» y avise a su administrador.')
-      .catch(() => this.logger.warn('No se pudo enviar el aviso de cambio de contraseña'));
+  private async avisarCambio(correo: string): Promise<void> {
+    await enSegundoPlano(
+      this.correo.enviar(correo, 'Su contraseña de DonaDoc fue cambiada', 'Le informamos que la contraseña de su cuenta DonaDoc acaba de cambiar.\nSi no fue usted, restablézcala de inmediato desde «Olvidé mi contraseña» y avise a su administrador.'),
+      () => this.logger.warn('No se pudo enviar el aviso de cambio de contraseña'),
+    );
   }
 }
