@@ -34,23 +34,22 @@ Guarde una copia segura de `DATA_ENCRYPTION_KEY`: si se pierde, los datos cifrad
 
 1. Cree un proyecto en <https://supabase.com> y guarde la contraseña de la base de datos.
 2. **Storage → New bucket**: nombre `documentos`, **sin** marcarlo como público.
-3. **Project Settings → API**: copie la *Project URL* y la llave `service_role` (secreta; solo va al servidor).
+3. **Project Settings → API**: copie la *Project URL* y la llave secreta (`service_role` clásica o `sb_secret_…`; solo va al servidor, nunca al frontend).
 4. **Connect → Connection pooling**: copie el host del *pooler* (`aws-…pooler.supabase.com`) y el usuario `postgres.<id-del-proyecto>`.
    - *Session pooler* (puerto 5432): para migrar desde su equipo.
    - *Transaction pooler* (puerto 6543): para Vercel.
 
 ## 3. Crear las tablas y el usuario demo (una sola vez, desde su equipo)
 
-Cree un archivo `.env` (Git lo ignora) con las variables de `.env.example` y estos valores: `ENVIRONMENT=local`, `DB_HOST`, `DB_PORT=5432`, `DB_USER`,
-`DB_PASSWORD`, `DB_NAME=postgres`, `DB_SSL=true`, `SEED_ENABLED=true`, `EXTRACTOR_IA_PROVIDER=mock`, y los cinco secretos del paso 1.
-
 ```bash
+node scripts/preparar-migracion.mjs <referencia-del-proyecto> <host-del-pooler>   # pide la contraseña de la base y arma .env (ignorado por Git)
 npm ci
 npm run build
 node dist/main.js     # aplica las migraciones y crea el usuario demo; deténgalo con Ctrl+C cuando diga que escucha
 ```
 
-Use **la misma** `DATA_ENCRYPTION_KEY` que pondrá en Vercel. El usuario demo es `coordinador@demo.local` y su clave es `SEED_ADMIN_PASSWORD`.
+Usa **los mismos** secretos de `.env.secretos` que pondrá en Vercel (sobre todo `DATA_ENCRYPTION_KEY`). El usuario demo es `coordinador@demo.local` y su clave es
+`SEED_ADMIN_PASSWORD`. Después de migrar, borre el archivo `.env` (contiene la contraseña de la base).
 
 ## 4. Backend en Vercel
 

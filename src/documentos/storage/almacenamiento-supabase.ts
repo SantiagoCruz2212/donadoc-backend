@@ -24,8 +24,11 @@ export class AlmacenamientoSupabase extends Almacenamiento {
     return `${this.url}/storage/v1/object/${autenticada ? 'authenticated/' : ''}${encodeURIComponent(this.bucket)}/${clave}`;
   }
 
+  /** La llave `service_role` clásica es un JWT y va también como Bearer; las llaves nuevas (`sb_secret_…`) solo van en `apikey`. */
   private get cabeceras(): Record<string, string> {
-    return { authorization: `Bearer ${this.llaveServicio}`, apikey: this.llaveServicio };
+    const h: Record<string, string> = { apikey: this.llaveServicio };
+    if (this.llaveServicio.startsWith('eyJ')) h.authorization = `Bearer ${this.llaveServicio}`;
+    return h;
   }
 
   async put(key: string, data: Buffer): Promise<void> {
