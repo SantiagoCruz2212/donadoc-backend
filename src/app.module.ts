@@ -47,6 +47,7 @@ import { UsersModule } from '@users/users.module';
           migrationsTransactionMode: 'each' as const,
           // Solo en local las migraciones corren al arrancar; en despliegues, una vez en el paso de despliegue (npm run migration:run).
           migrationsRun: cfg.get<string>('ENVIRONMENT') === 'local',
+          extra: { max: cfg.get<number>('DB_POOL_MAX') },
           retryAttempts: 10,
           retryDelay: 2000,
         };

@@ -19,6 +19,8 @@ Quien coordina un programa de trasplantes (caso real de una coordinadora de tras
 | Documento | Contenido |
 |---|---|
 | [docs/requisitos.md](docs/requisitos.md) | Historias de usuario, criterios de aceptación y requisitos no funcionales |
+| [docs/despliegue.md](docs/despliegue.md) | Manual de despliegue (Vercel + Supabase) y variables de entorno |
+| [docs/uso-de-ia.md](docs/uso-de-ia.md) | Cómo se usó IA para construir el proyecto, qué se aceptó y qué se corrigió |
 | [docs/arquitectura.md](docs/arquitectura.md) | Diagramas C4 (contexto y contenedores) en Mermaid |
 | [docs/adr/](docs/adr) | Decisiones de arquitectura (stack y base de datos) |
 

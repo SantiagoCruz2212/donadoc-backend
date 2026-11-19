@@ -92,5 +92,8 @@
       "^@formatos/(.*)$": "<rootDir>/formatos/$1",
       "^@firmas/(.*)$": "<rootDir>/firmas/$1"
     }
+  },
+  "engines": {
+    "node": "22.x"
   }
 }

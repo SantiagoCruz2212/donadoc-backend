@@ -27,7 +27,7 @@ DonaDoc usa IA de dos maneras distintas: **dentro del producto** (extrae datos d
 | S2 arquitectura | Diagramas C4 en Mermaid y 2 ADR a partir del código | Contexto y contenedores | Se verificó contra el código que no existieran cola de mensajes, servicio de autenticación aparte ni S3 |
 | S2 revisión de código | Revisión como "revisor senior" de `auth.service.ts`, `documentos.service.ts` y su controlador; 4 mejoras, un commit cada una | Constante de bcrypt, error 422 en PDF dañado, validación de la firma `%PDF-`, límite de subida seguro | Se descartó filtrar `eliminadoEn` en la consulta (rompía una prueba y quitaba una segunda defensa) |
 | S3 pruebas y CI | Configuración de GitHub Actions y traslado de pruebas | CI con pruebas, integración con PostgreSQL, imagen y rendimiento | Ver el caso del CI más abajo |
-| S4 IA y seguridad | Cifrado AES-256-GCM de datos clínicos sensibles y un proveedor de IA adicional (Groq) | Cifrado de los campos de mayor riesgo | El resto del cifrado quedó como trabajo futuro, con su límite documentado |
+| S3-S4 (14-17 nov) seguridad e IA | Cifrado AES-256-GCM de datos clínicos sensibles y un proveedor de IA adicional (Groq) | Cifrado de los campos de mayor riesgo | El resto del cifrado quedó como trabajo futuro, con su límite documentado |
 
 ## Cómo se verificó lo generado
 
