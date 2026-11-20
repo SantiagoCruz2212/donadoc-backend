@@ -30,6 +30,7 @@ Las credenciales de prueba se entregan aparte (no están en el repositorio). Có
 |---|---|
 | [docs/requisitos.md](docs/requisitos.md) | Historias de usuario, criterios de aceptación y requisitos no funcionales |
 | [docs/despliegue.md](docs/despliegue.md) | Manual de despliegue (Vercel + Supabase) y variables de entorno |
+| [docs/manual-usuario.md](docs/manual-usuario.md) | Manual de usuario con capturas: flujo completo, función de IA y problemas frecuentes |
 | [docs/uso-de-ia.md](docs/uso-de-ia.md) | Cómo se usó IA para construir el proyecto, qué se aceptó y qué se corrigió |
 | [docs/arquitectura.md](docs/arquitectura.md) | Diagramas C4 (contexto y contenedores) en Mermaid |
 | [docs/adr/](docs/adr) | Decisiones de arquitectura (stack y base de datos) |
