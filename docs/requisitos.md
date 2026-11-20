@@ -90,7 +90,7 @@ Como **nuevo integrante o evaluador**, quiero un README actualizado, un manual d
 - Dado el manual de usuario, cuando lo sigo, entonces puedo completar el flujo de HU-02 a HU-05.
 - Dado el manual de despliegue, cuando lo sigo, entonces sé qué secretos y qué servidor necesito.
 
-Estado: **Parcial** (README con problema, stack, variables y demo en línea; manual de despliegue y documento de uso de IA hechos. **Pendiente** el manual de usuario con capturas)
+Estado: **Hecha** (README con problema, stack, variables y demo en línea; manual de despliegue, documento de uso de IA y [manual de usuario con capturas](manual-usuario.md))
 
 ### HU-10: Verificar cada cambio con pruebas automáticas
 Como **desarrollador**, quiero que cada push ejecute las pruebas, para detectar errores antes de fusionar.
@@ -99,6 +99,15 @@ Como **desarrollador**, quiero que cada push ejecute las pruebas, para detectar 
 - Dado un CI en verde, cuando se construye la imagen Docker, entonces se construye sin publicarse.
 
 Estado: **Hecha** (CI en verde en los dos repositorios; las pruebas de rendimiento corren en el CI del backend y las funcionales de navegador están en `donadoc-frontend/pruebas`, sin correr en el CI)
+
+### HU-11: Gestionar accesos de la institución
+Como **superadmin**, quiero crear usuarios indicando su correo y su rol, para que reciban una clave generada por el sistema sin que yo la conozca.
+- Dado un correo nuevo y un rol, cuando creo el acceso, entonces el sistema genera una clave aleatoria y la envía solo por correo.
+- Dado un correo ya registrado, cuando intento crearlo, entonces recibo 409 y no se envía nada.
+- Dado que el correo no se puede enviar, cuando creo el acceso, entonces el acceso no queda creado.
+- Dado un usuario que no es superadmin, cuando consulta o crea accesos, entonces recibe 403.
+
+Estado: **Hecha** (no estaba en la lista original: se agregó en la última semana; probada en producción con correo real)
 
 ## No funcionales
 
